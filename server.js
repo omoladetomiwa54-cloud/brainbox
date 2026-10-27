@@ -133,10 +133,10 @@ const server = http.createServer(async (req, res) => {
       const result = await termiiRequest("/api/sms/otp/send", {
         message_type: "NUMERIC",
         to: phone,
-        from: process.env.TERMII_SENDER_ID || "BRAINBOX",
+        from: "N-Alert",
         channel: "generic",
         pin_attempts: 3,
-        pin_time_to_live: 5,
+        pin_time_to_live: 10,
         pin_length: 6,
         pin_placeholder: "< 123456 >",
         message_text:
