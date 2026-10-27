@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRAINBOX | Registration</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5ff;
+      color: #172554;
+    }
+    header {
+      background: #173da6;
+      color: white;
+      padding: 22px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+    }
+    main {
+      width: min(440px, 92%);
+      margin: 35px auto;
+      background: white;
+      padding: 26px;
+      border-radius: 16px;
+      box-shadow: 0 8px 28px #102d6618;
+    }
+    h1 { margin-top: 0; font-size: 24px; }
+    p { line-height: 1.5; color: #475569; }
+    label { display: block; margin: 16px 0 6px; font-weight: bold; }
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      margin-top: 16px;
+      padding: 13px;
+      background: #173da6;
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    #status { margin-top: 16px; overflow-wrap: anywhere; }
+    .note { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <header>BRAINBOX</header>
+  <main>
+    <h1>Create your account</h1>
+    <p>Verify your Nigerian phone number to continue.</p>
+
+    <form id="phoneForm">
+      <label for="phone">Phone number</label>
+      <input id="phone" name="phone" type="tel"
+        placeholder="08012345678 or 2348012345678"
+        autocomplete="tel" required>
+      <button id="sendButton" type="submit">Send OTP</button>
+    </form>
+
+    <form id="verifyForm" hidden>
+      <label for="pin">Six-digit verification code</label>
+      <input id="pin" name="pin" inputmode="numeric"
+        autocomplete="one-time-code" pattern="[0-9]{6}"
+        maxlength="6" placeholder="Enter OTP" required>
+      <button id="verifyButton" type="submit">Verify phone</button>
+    </form>
+
+    <p id="status" role="status" aria-live="polite"></p>
+    <p class="note">Never share your verification code with anyone.</p>
+  </main>
+
+  <script>
+    const phoneForm = document.getElementById("phoneForm");
+    const verifyForm = document.getElementById("verifyForm");
+    const phoneInput = document.getElementById("phone");
+    const pinInput = document.getElementById("pin");
+    const statusBox = document.getElementById("status");
+    const sendButton = document.getElementById("sendButton");
+    const verifyButton = document.getElementById("verifyButton");
+
+    let currentPhone = "";
+
+    function normalizePhone(value) {
+      let phone = value.replace(/[\s()+-]/g, "");
+      if (phone.startsWith("0")) phone = "234" + phone.slice(1);
+      return phone;
+    }
+
+    async function postJSON(url, data) {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Request failed.");
+      return result;
+    }
+
+    phoneForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      currentPhone = normalizePhone(phoneInput.value);
+
+      if (!/^234\d{10}$/.test(currentPhone)) {
+        statusBox.textContent = "Enter a valid Nigerian phone number.";
+        return;
+      }
+
+      sendButton.disabled = true;
+      statusBox.textContent = "Requesting OTP…";
+
+      try {
+        const result = await postJSON("/api/send-otp", { phone: currentPhone });
+        statusBox.textContent = result.message;
+        verifyForm.hidden = false;
+        pinInput.focus();
+      } catch (error) {
+        statusBox.textContent = error.message;
+      } finally {
+        sendButton.disabled = false;
+      }
+    });
+
+    verifyForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      verifyButton.disabled = true;
+      statusBox.textContent = "Checking code…";
+
+      try {
+        const result = await postJSON("/api/verify-otp", {
+          phone: currentPhone,
+          pin: pinInput.value.trim()
+        });
+        statusBox.textContent = result.message +
+          " This confirms the phone only; account creation is not connected yet.";
+      } catch (error) {
+        statusBox.textContent = error.message;
+      } finally {
+        verifyButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
