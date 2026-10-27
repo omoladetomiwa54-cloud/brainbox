@@ -120,15 +120,26 @@ const server = http.createServer(async (req, res) => {
       }
 
       const now = Date.now();
-      const lastRequest = recentRequests.get(phone);
+const phoneKey = phone;
+const today = new Date().toDateString();
 
-      if (lastRequest && now - lastRequest < 60000) {
-        return sendJSON(res, 429, {
-          error: "Please wait one minute before requesting another code."
-        });
-      }
-
-      recentRequests.set(phone, now);
+if (!recentRequests.has(phoneKey)) {
+  recentRequests.set(phoneKey, { count: 1, date: today });
+} else {
+  const record = recentRequests.get(phoneKey);
+  if (record.date !== today) {
+    record.count = 1;
+    record.date = today;
+  } else {
+    record.count++;
+  }
+  if (record.count > 1000) {
+    return sendJSON(res, 429, {
+      error: "You don reach 1000 OTP today. Try tomorrow."
+    });
+  }
+  recentRequests.set(phoneKey, record);
+}
 
       const result = await termiiRequest("/api/sms/otp/send", {
         message_type: "NUMERIC",
