@@ -601,60 +601,127 @@
     </div>
   </section>
 
-  <!-- FIREBASE PHONE VERIFICATION -->
-  <section class="otp-section" id="verification">
-    <div class="container">
+  <script>
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
 
-      <div class="otp-card">
-        <h2>Phone Verification</h2>
+  const sendOtpForm = document.getElementById("sendOtpForm");
+  const otpForm = document.getElementById("otpForm");
+  const phoneInput = document.getElementById("phone");
+  const otpInput = document.getElementById("otp");
+  const otpStatus = document.getElementById("otpStatus");
+  const sendOtpButton = document.getElementById("sendOtpButton");
+  const verifyOtpButton = document.getElementById("verifyOtpButton");
 
-        <p>
-          Verify your phone number using an SMS code.
-        </p>
+  let currentPhone = "";
 
-        <form id="sendOtpForm">
-          <label for="phone">Nigerian Phone Number</label>
+  function normalisePhone(value) {
+    let phone = value.replace(/\D/g, "");
 
-          <input
-            id="phone"
-            type="tel"
-            inputmode="tel"
-            autocomplete="tel"
-            placeholder="+2348012345678"
-            required
-          >
+    if (phone.startsWith("234")) {
+      phone = phone.substring(3);
+    } else if (phone.startsWith("0")) {
+      phone = phone.substring(1);
+    }
 
-          <div id="recaptcha-container"></div>
+    if (!/^[789]\d{9}$/.test(phone)) {
+      return null;
+    }
 
-          <button class="button full-button" type="submit">
-            Send OTP
-          </button>
-        </form>
+    return "234" + phone;
+  }
 
-        <form id="otpForm">
-          <label for="otp">Verification Code</label>
+  sendOtpForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
 
-          <input
-            id="otp"
-            type="text"
-            inputmode="numeric"
-            autocomplete="one-time-code"
-            placeholder="Enter the SMS code"
-            required
-          >
+    const phone = normalisePhone(phoneInput.value);
 
-          <button class="button full-button" type="submit">
-            Verify Phone
-          </button>
-        </form>
+    if (!phone) {
+      otpStatus.textContent =
+        "Enter a valid Nigerian phone number, e.g. 7076713737.";
+      return;
+    }
 
-        <p class="status" id="otpStatus" aria-live="polite">
-          Enter your phone number to begin.
-        </p>
-      </div>
+    sendOtpButton.disabled = true;
+    otpStatus.textContent = "Sending your OTP...";
 
-    </div>
-  </section>
+    try {
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ phone: phone })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Could not send OTP.");
+      }
+
+      currentPhone = phone;
+      otpStatus.textContent =
+        "OTP request accepted. Check your phone for the SMS code.";
+      otpInput.focus();
+
+    } catch (error) {
+      otpStatus.textContent =
+        error.message || "Could not send OTP. Please try again.";
+    } finally {
+      sendOtpButton.disabled = false;
+    }
+  });
+
+  otpForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    if (!currentPhone) {
+      otpStatus.textContent =
+        "Please request an OTP first.";
+      return;
+    }
+
+    const pin = otpInput.value.trim();
+
+    if (!/^\d{6}$/.test(pin)) {
+      otpStatus.textContent =
+        "Enter the 6-digit OTP sent to your phone.";
+      return;
+    }
+
+    verifyOtpButton.disabled = true;
+    otpStatus.textContent = "Verifying your code...";
+
+    try {
+      const response = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          phone: currentPhone,
+          pin: pin
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Verification failed.");
+      }
+
+      otpStatus.textContent =
+        data.message || "Phone number verified successfully!";
+
+    } catch (error) {
+      otpStatus.textContent =
+        error.message || "Verification failed. Please try again.";
+    } finally {
+      verifyOtpButton.disabled = false;
+    }
+  });
+  </script>
 
 </main>
 
