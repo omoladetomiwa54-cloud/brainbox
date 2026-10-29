@@ -1,156 +1,762 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BRAINBOX | Registration</title>
+  <meta name="theme-color" content="#101010">
+
+  <title>BRAINBOX | Fashion & Clothing</title>
+
+  <meta name="description"
+        content="Discover stylish and affordable fashion at BRAINBOX. Find clothing that matches your style.">
+
   <style>
-    * { box-sizing: border-box; }
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f5ff;
-      color: #172554;
+      padding: 0;
     }
-    header {
-      background: #173da6;
-      color: white;
-      padding: 22px;
-      text-align: center;
-      font-size: 26px;
-      font-weight: bold;
+
+    :root {
+      --dark: #101010;
+      --dark-card: #1c1c1c;
+      --gold: #e4bd75;
+      --cream: #faf7f0;
+      --text: #292929;
+      --muted: #777;
     }
-    main {
-      width: min(440px, 92%);
-      margin: 35px auto;
-      background: white;
-      padding: 26px;
-      border-radius: 16px;
-      box-shadow: 0 8px 28px #102d6618;
+
+    html {
+      scroll-behavior: smooth;
     }
-    h1 { margin-top: 0; font-size: 24px; }
-    p { line-height: 1.5; color: #475569; }
-    label { display: block; margin: 16px 0 6px; font-weight: bold; }
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 16px;
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
     }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
     button {
-      width: 100%;
-      margin-top: 16px;
-      padding: 13px;
-      background: #173da6;
-      color: white;
-      border: 0;
-      border-radius: 8px;
-      font-size: 16px;
       cursor: pointer;
     }
-    button:disabled { opacity: .6; cursor: wait; }
-    #status { margin-top: 16px; overflow-wrap: anywhere; }
-    .note { font-size: 13px; }
+
+    header {
+      background: var(--dark);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .navbar {
+      max-width: 1150px;
+      margin: auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--gold);
+    }
+
+    .hero {
+      background: var(--dark);
+      color: white;
+      padding: 85px 22px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 7vw, 64px);
+      line-height: 1.15;
+      margin: 18px 0;
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+    }
+
+    .hero p {
+      color: #dedede;
+      max-width: 590px;
+      margin: 0 auto 28px;
+    }
+
+    .button {
+      display: inline-block;
+      border: none;
+      border-radius: 5px;
+      background: var(--gold);
+      color: #171717;
+      font-weight: bold;
+      padding: 13px 22px;
+    }
+
+    .button:hover {
+      opacity: 0.88;
+    }
+
+    .button-outline {
+      display: inline-block;
+      padding: 12px 21px;
+      border: 1px solid var(--gold);
+      border-radius: 5px;
+      color: var(--gold);
+      margin-left: 8px;
+    }
+
+    section {
+      padding: 65px 20px;
+      scroll-margin-top: 75px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-heading h2 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 35px;
+      align-items: center;
+    }
+
+    .about-panel {
+      background: var(--dark);
+      color: white;
+      padding: 35px;
+      border-radius: 12px;
+    }
+
+    .about-panel .big-text {
+      font-size: 29px;
+      font-weight: bold;
+      color: var(--gold);
+      line-height: 1.3;
+    }
+
+    .about-copy h3 {
+      margin-bottom: 12px;
+      font-size: 23px;
+    }
+
+    .about-copy p {
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 35px;
+    }
+
+    .feature {
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 9px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .feature .icon {
+      font-size: 30px;
+    }
+
+    .feature h3 {
+      margin: 10px 0;
+      font-size: 17px;
+    }
+
+    .feature p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .shop-section {
+      background: white;
+    }
+
+    .shop-notice {
+      max-width: 650px;
+      margin: auto;
+      padding: 28px;
+      text-align: center;
+      background: var(--cream);
+      border-radius: 10px;
+    }
+
+    .shop-notice h3 {
+      margin-bottom: 10px;
+    }
+
+    .shop-notice p {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .contact-info, .contact-form, .otp-card {
+      background: white;
+      padding: 28px;
+      border-radius: 10px;
+      border: 1px solid #eee;
+    }
+
+    .contact-info h3, .contact-form h3 {
+      margin-bottom: 15px;
+    }
+
+    .contact-info p {
+      margin-bottom: 12px;
+      color: #555;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      font-size: 14px;
+      margin: 14px 0 6px;
+    }
+
+    input, textarea {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: white;
+      color: #222;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .full-button {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .otp-section {
+      background: #eee9df;
+    }
+
+    .otp-card {
+      max-width: 470px;
+      margin: auto;
+    }
+
+    .otp-card h2 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .otp-card > p {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .status {
+      margin-top: 14px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      background: var(--dark);
+      color: #ddd;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    footer strong {
+      color: var(--gold);
+    }
+
+    footer p {
+      margin: 5px 0;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .navbar {
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: center;
+        gap: 13px;
+      }
+
+      .hero {
+        padding: 65px 18px;
+      }
+
+      .about-grid, .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 48px 17px;
+      }
+
+      .about-panel {
+        padding: 27px;
+      }
+
+      .button-outline {
+        margin: 10px 0 0;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <header>BRAINBOX</header>
+
+  <header>
+    <div class="navbar">
+      <a href="#home" class="logo">BRAINBOX</a>
+
+      <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#shop">Shop</a>
+        <a href="#contact">Contact Us</a>
+        <a href="#verification">Verify Phone</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HOME PAGE -->
   <main>
-    <h1>Create your account</h1>
-    <p>Verify your Nigerian phone number to continue.</p>
+    <section class="hero" id="home">
+      <div class="container">
+        <p class="eyebrow">Welcome to BRAINBOX</p>
 
-    <form id="phoneForm">
-      <label for="phone">Phone number</label>
-      <input id="phone" name="phone" type="tel"
-        placeholder="08012345678 or 2348012345678"
-        autocomplete="tel" required>
-      <button id="sendButton" type="submit">Send OTP</button>
-    </form>
+        <h1>Style That Speaks.<br><span>Confidence That Shows.</span></h1>
 
-    <form id="verifyForm" hidden>
-      <label for="pin">Six-digit verification code</label>
-      <input id="pin" name="pin" inputmode="numeric"
-        autocomplete="one-time-code" pattern="[0-9]{6}"
-        maxlength="6" placeholder="Enter OTP" required>
-      <button id="verifyButton" type="submit">Verify phone</button>
-    </form>
+        <p>
+          Discover fashion that expresses who you are.
+          Explore stylish clothing and find looks that suit
+          your personality, your lifestyle and your budget.
+        </p>
 
-    <p id="status" role="status" aria-live="polite"></p>
-    <p class="note">Never share your verification code with anyone.</p>
+        <a class="button" href="#shop">Explore Our Shop</a>
+        <a class="button-outline" href="#about">Discover Our Story</a>
+      </div>
+    </section>
+
+    <!-- ABOUT US -->
+    <section id="about">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Our Story</p>
+          <h2>About BRAINBOX</h2>
+          <p>Fashion, quality and confidence in every choice.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-panel">
+            <p class="eyebrow">More Than Clothing</p>
+            <p class="big-text">
+              Your style is your story. Make every outfit count.
+            </p>
+          </div>
+
+          <div class="about-copy">
+            <h3>Who We Are</h3>
+
+            <p>
+              BRAINBOX is a clothing business created for people
+              who want to express themselves through fashion.
+              We believe that choosing an outfit should be an
+              enjoyable experience that helps you feel confident
+              and comfortable in your own style.
+            </p>
+
+            <p>
+              Our goal is to offer fashionable clothing at
+              affordable prices while providing helpful customer
+              service and a convenient shopping experience.
+            </p>
+
+            <h3>Our Mission</h3>
+
+            <p>
+              Our mission is to make fashion more accessible by
+              helping our customers discover clothing that suits
+              their tastes, needs and budgets.
+            </p>
+
+            <h3>Our Promise</h3>
+
+            <p>
+              We aim to treat every customer with respect,
+              communicate clearly and make shopping with BRAINBOX
+              as simple and enjoyable as possible.
+            </p>
+          </div>
+        </div>
+
+        <div class="features">
+          <div class="feature">
+            <div class="icon">👗</div>
+            <h3>Fashion & Style</h3>
+            <p>Explore clothing to express your personal style.</p>
+          </div>
+
+          <div class="feature">
+            <div class="icon">💎</div>
+            <h3>Value for Money</h3>
+            <p>We aim to offer styles at prices our customers can afford.</p>
+          </div>
+
+          <div class="feature">
+            <div class="icon">🤝</div>
+            <h3>Customer Care</h3>
+            <p>We value clear communication and customer satisfaction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP -->
+    <section class="shop-section" id="shop">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Find Your Look</p>
+          <h2>Our Shop</h2>
+          <p>Discover your next favourite outfit.</p>
+        </div>
+
+        <div class="shop-notice">
+          <h3>Your Style Journey Starts Here</h3>
+
+          <p>
+            Our online shop is being prepared.
+            Contact us to ask about available clothing,
+            sizes, prices and ordering.
+          </p>
+
+          <a class="button" href="#contact">Make an Enquiry</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT US -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Get in Touch</p>
+          <h2>Contact Us</h2>
+          <p>Questions about our clothing? We'd love to hear from you.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-info">
+            <h3>Talk to BRAINBOX</h3>
+
+            <p>
+              Need help choosing an outfit or want to ask about
+              an order? Contact us using your preferred channel.
+            </p>
+
+            <p>
+              <strong>Business:</strong> BRAINBOX
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              Add your business email before publishing.
+            </p>
+
+            <p>
+              <strong>WhatsApp:</strong>
+              Add your business WhatsApp link before publishing.
+            </p>
+          </div>
+
+          <form class="contact-form" id="contactForm">
+            <h3>Send an Enquiry</h3>
+
+            <label for="customerName">Your Name</label>
+            <input id="customerName" name="name"
+                   type="text" required>
+
+            <label for="customerEmail">Your Email</label>
+            <input id="customerEmail" name="email"
+                   type="email" required>
+
+            <label for="customerMessage">Your Message</label>
+            <textarea id="customerMessage" name="message"
+                      required></textarea>
+
+            <button class="button full-button" type="submit">
+              Prepare Message
+            </button>
+
+            <p class="status" id="contactStatus" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHONE OTP VERIFICATION -->
+    <section class="otp-section" id="verification">
+      <div class="container">
+        <div class="otp-card">
+          <h2>Phone Verification</h2>
+
+          <p>
+            Verify your phone number to continue.
+          </p>
+
+          <form id="sendOtpForm">
+            <label for="phone">Nigerian Phone Number</label>
+
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              placeholder="+2348012345678"
+              autocomplete="tel"
+              required
+            >
+
+            <button class="button full-button" type="submit">
+              Send OTP
+            </button>
+          </form>
+
+          <form id="verifyOtpForm">
+            <label for="otp">Enter Verification Code</label>
+
+            <input
+              id="otp"
+              name="otp"
+              type="text"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              placeholder="Enter the code you received"
+              required
+            >
+
+            <button class="button full-button" type="submit">
+              Verify Phone
+            </button>
+          </form>
+
+          <p class="status" id="otpStatus" aria-live="polite">
+            Enter your number to begin.
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
 
+  <footer>
+    <p><strong>BRAINBOX</strong></p>
+    <p>Your Style, Your Confidence.</p>
+    <p>
+      &copy; <span id="year"></span> BRAINBOX.
+      All rights reserved.
+    </p>
+  </footer>
+
   <script>
-    const phoneForm = document.getElementById("phoneForm");
-    const verifyForm = document.getElementById("verifyForm");
-    const phoneInput = document.getElementById("phone");
-    const pinInput = document.getElementById("pin");
-    const statusBox = document.getElementById("status");
-    const sendButton = document.getElementById("sendButton");
-    const verifyButton = document.getElementById("verifyButton");
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
 
-    let currentPhone = "";
+    // Contact form: prepares a message but does not send it
+    // to a business inbox until a contact service is connected.
+    document.getElementById("contactForm").addEventListener(
+      "submit",
+      function(event) {
+        event.preventDefault();
 
-    function normalizePhone(value) {
-      let phone = value.replace(/[\s()+-]/g, "");
-      if (phone.startsWith("0")) phone = "234" + phone.slice(1);
-      return phone;
-    }
+        const name =
+          document.getElementById("customerName").value.trim();
 
-    async function postJSON(url, data) {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Request failed.");
-      return result;
-    }
+        const email =
+          document.getElementById("customerEmail").value.trim();
 
-    phoneForm.addEventListener("submit", async event => {
-      event.preventDefault();
-      currentPhone = normalizePhone(phoneInput.value);
+        const message =
+          document.getElementById("customerMessage").value.trim();
 
-      if (!/^234\d{10}$/.test(currentPhone)) {
-        statusBox.textContent = "Enter a valid Nigerian phone number.";
-        return;
+        const subject = encodeURIComponent(
+          "BRAINBOX Customer Enquiry"
+        );
+
+        const body = encodeURIComponent(
+          "Name: " + name +
+          "\nEmail: " + email +
+          "\n\nMessage:\n" + message
+        );
+
+        document.getElementById("contactStatus").textContent =
+          "Your email app will open if one is configured.";
+
+        window.location.href =
+          "mailto:?subject=" + subject + "&body=" + body;
       }
+    );
 
-      sendButton.disabled = true;
-      statusBox.textContent = "Requesting OTP…";
+    // OTP API: keeps using the existing Node.js server.
+    const otpStatus = document.getElementById("otpStatus");
 
-      try {
-        const result = await postJSON("/api/send-otp", { phone: currentPhone });
-        statusBox.textContent = result.message;
-        verifyForm.hidden = false;
-        pinInput.focus();
-      } catch (error) {
-        statusBox.textContent = error.message;
-      } finally {
-        sendButton.disabled = false;
+    document.getElementById("sendOtpForm").addEventListener(
+      "submit",
+      async function(event) {
+        event.preventDefault();
+
+        const phone =
+          document.getElementById("phone").value.trim();
+
+        otpStatus.textContent = "Sending verification code...";
+
+        try {
+          const response = await fetch("/api/send-otp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ phone: phone })
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              result.message || result.error ||
+              "Unable to send the verification code."
+            );
+          }
+
+          otpStatus.textContent =
+            result.message || "Request submitted. Check your phone.";
+
+        } catch (error) {
+          otpStatus.textContent =
+            error.message ||
+            "Could not send OTP. Please try again later.";
+        }
       }
-    });
+    );
 
-    verifyForm.addEventListener("submit", async event => {
-      event.preventDefault();
-      verifyButton.disabled = true;
-      statusBox.textContent = "Checking code…";
+    document.getElementById("verifyOtpForm").addEventListener(
+      "submit",
+      async function(event) {
+        event.preventDefault();
 
-      try {
-        const result = await postJSON("/api/verify-otp", {
-          phone: currentPhone,
-          pin: pinInput.value.trim()
-        });
-        statusBox.textContent = result.message +
-          " This confirms the phone only; account creation is not connected yet.";
-      } catch (error) {
-        statusBox.textContent = error.message;
-      } finally {
-        verifyButton.disabled = false;
+        const phone =
+          document.getElementById("phone").value.trim();
+
+        const otp =
+          document.getElementById("otp").value.trim();
+
+        otpStatus.textContent = "Checking verification code...";
+
+        try {
+          const response = await fetch("/api/verify-otp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              phone: phone,
+              otp: otp
+            })
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              result.message || result.error ||
+              "Verification failed."
+            );
+          }
+
+          otpStatus.textContent =
+            result.message || "Phone verification completed.";
+
+        } catch (error) {
+          otpStatus.textContent =
+            error.message ||
+            "Could not verify the code. Please try again.";
+        }
       }
-    });
+    );
   </script>
+
 </body>
 </html>
