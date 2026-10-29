@@ -3,26 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101010">
-
+  <meta name="description" content="BRAINBOX Fashion & Clothing. Discover your style and shop with confidence.">
   <title>BRAINBOX | Fashion & Clothing</title>
 
-  <meta name="description"
-    content="Discover stylish and affordable clothing at BRAINBOX in Akure, Ondo State, Nigeria.">
-
   <style>
+    :root {
+      --dark: #11110f;
+      --gold: #d6ad55;
+      --cream: #f7f2e8;
+      --white: #ffffff;
+      --muted: #bcb8ae;
+      --border: #37352f;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-    }
-
-    :root {
-      --dark: #111111;
-      --gold: #e5bd76;
-      --cream: #faf7f0;
-      --text: #292929;
-      --muted: #777777;
     }
 
     html {
@@ -31,8 +28,8 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--cream);
-      color: var(--text);
+      background: var(--dark);
+      color: var(--cream);
       line-height: 1.7;
     }
 
@@ -41,49 +38,45 @@
       text-decoration: none;
     }
 
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
+    .container {
+      width: min(1100px, 90%);
+      margin: auto;
     }
 
     header {
-      background: var(--dark);
-      color: white;
+      background: #0b0b0a;
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
     }
 
     .navbar {
-      max-width: 1150px;
-      margin: auto;
-      padding: 16px 20px;
+      min-height: 75px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 15px;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 15px 0;
     }
 
     .logo {
-      color: var(--gold);
       font-size: 25px;
-      font-weight: 800;
-      letter-spacing: 2px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: var(--gold);
     }
 
     nav {
       display: flex;
+      gap: 18px;
       flex-wrap: wrap;
-      gap: 16px;
     }
 
     nav a {
       font-size: 14px;
-      color: white;
+      color: var(--cream);
     }
 
     nav a:hover {
@@ -91,77 +84,90 @@
     }
 
     .hero {
-      padding: 90px 20px;
-      text-align: center;
-      background: var(--dark);
-      color: white;
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      background:
+        radial-gradient(ellipse at 85% 30%, #4b3b1c 0, transparent 38%),
+        linear-gradient(135deg, #11110f, #201b10);
+    }
+
+    .hero-content {
+      padding: 85px 0;
+      max-width: 720px;
     }
 
     .eyebrow {
       color: var(--gold);
-      font-size: 13px;
+      letter-spacing: 4px;
+      font-size: 12px;
       font-weight: bold;
-      letter-spacing: 3px;
       text-transform: uppercase;
     }
 
-    .hero h1 {
-      font-size: clamp(36px, 7vw, 65px);
-      line-height: 1.2;
+    h1 {
+      font-size: clamp(42px, 8vw, 76px);
+      line-height: 1.1;
       margin: 20px 0;
     }
 
-    .hero h1 span {
+    h1 span,
+    .gold {
       color: var(--gold);
     }
 
     .hero p {
-      max-width: 650px;
-      margin: 0 auto 28px;
-      color: #dedede;
+      color: var(--muted);
+      max-width: 550px;
+      margin-bottom: 28px;
     }
 
     .button {
       display: inline-block;
-      background: var(--gold);
-      color: #111;
       border: 0;
-      border-radius: 5px;
-      padding: 13px 22px;
+      background: var(--gold);
+      color: #17140d;
       font-weight: bold;
+      padding: 13px 24px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
     }
 
     .button:hover {
-      opacity: 0.85;
+      background: #f0cc7a;
+      transform: translateY(-1px);
     }
 
-    .button-outline {
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .outline-button {
       display: inline-block;
-      padding: 12px 21px;
       border: 1px solid var(--gold);
-      border-radius: 5px;
       color: var(--gold);
+      padding: 12px 22px;
+      border-radius: 5px;
       margin-left: 8px;
     }
 
     section {
-      padding: 65px 20px;
-      scroll-margin-top: 85px;
-    }
-
-    .container {
-      max-width: 1050px;
-      margin: auto;
+      padding: 80px 0;
+      scroll-margin-top: 90px;
     }
 
     .section-heading {
       text-align: center;
-      margin-bottom: 35px;
+      margin-bottom: 40px;
     }
 
     .section-heading h2 {
-      font-size: 32px;
-      margin: 8px 0;
+      font-size: clamp(28px, 5vw, 40px);
+      margin: 10px 0;
     }
 
     .section-heading p {
@@ -171,141 +177,166 @@
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 35px;
+      gap: 40px;
       align-items: center;
     }
 
     .about-panel {
-      background: var(--dark);
-      color: white;
-      border-radius: 12px;
-      padding: 35px;
-    }
-
-    .about-panel h3 {
-      color: var(--gold);
-      font-size: 30px;
-      line-height: 1.4;
-      margin-top: 15px;
-    }
-
-    .about-copy h3 {
-      margin: 16px 0 8px;
-    }
-
-    .about-copy p {
-      color: #555;
-      margin-bottom: 12px;
-    }
-
-    .features {
+      min-height: 260px;
+      border: 1px solid #514327;
+      background: linear-gradient(145deg, #292317, #151410);
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 35px;
-    }
-
-    .feature {
-      background: white;
-      padding: 25px;
-      border: 1px solid #eee;
-      border-radius: 9px;
-      text-align: center;
-    }
-
-    .feature .icon {
-      font-size: 30px;
-    }
-
-    .feature h3 {
-      margin: 10px 0;
-    }
-
-    .feature p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .shop-section {
-      background: white;
-    }
-
-    .shop-box {
-      max-width: 650px;
-      margin: auto;
-      background: var(--cream);
-      border-radius: 10px;
+      place-items: center;
+      border-radius: 12px;
       padding: 30px;
       text-align: center;
     }
 
-    .shop-box p {
-      margin: 12px 0 20px;
-      color: #555;
+    .about-panel strong {
+      display: block;
+      font-size: 42px;
+      color: var(--gold);
+      letter-spacing: 5px;
+    }
+
+    .about-copy p {
+      color: var(--muted);
+      margin: 14px 0;
+    }
+
+    .shop {
+      background: #171612;
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .product-card {
+      background: #201e18;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .product-art {
+      height: 190px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #39301d, #181713);
+      color: var(--gold);
+      font-size: 54px;
+      font-weight: 900;
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-info h3 {
+      margin-bottom: 5px;
+    }
+
+    .product-info p {
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 25px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
     }
 
-    .contact-card,
-    .otp-card {
-      background: white;
-      border: 1px solid #eee;
-      border-radius: 10px;
-      padding: 28px;
-    }
-
-    .contact-card h3 {
-      margin-bottom: 15px;
-    }
-
-    .contact-card p {
-      margin: 12px 0;
+    .contact-card {
+      padding: 22px;
+      border: 1px solid var(--border);
+      background: #191813;
+      border-radius: 8px;
       overflow-wrap: anywhere;
     }
 
-    .contact-card a {
-      color: #79551c;
-      text-decoration: underline;
+    .contact-card h3 {
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+
+    .contact-card p {
+      color: var(--muted);
+    }
+
+    .contact-card a:hover {
+      color: var(--gold);
     }
 
     .otp-section {
-      background: #eee9df;
+      background: #171612;
     }
 
     .otp-card {
-      max-width: 470px;
+      max-width: 520px;
       margin: auto;
+      padding: 32px;
+      background: #211f19;
+      border: 1px solid #514327;
+      border-radius: 12px;
+      box-shadow: 0 15px 40px #0004;
     }
 
     .otp-card h2 {
       text-align: center;
+      font-size: 30px;
       margin-bottom: 8px;
     }
 
     .otp-card > p {
       text-align: center;
       color: var(--muted);
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     label {
       display: block;
+      margin: 16px 0 8px;
       font-weight: bold;
       font-size: 14px;
-      margin: 15px 0 6px;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
+      padding: 14px;
       border-radius: 5px;
-      background: white;
-      color: #222;
+      border: 1px solid #555044;
+      background: #11110f;
+      color: white;
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--gold);
+    }
+
+    .phone-row {
+      display: flex;
+      gap: 9px;
+    }
+
+    .country-code {
+      padding: 12px 15px;
+      background: var(--gold);
+      color: #17140d;
+      font-weight: bold;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .phone-row input {
+      min-width: 0;
+      flex: 1;
     }
 
     .full-button {
@@ -314,38 +345,33 @@
     }
 
     .status {
-      font-size: 14px;
+      padding: 12px;
+      border-radius: 5px;
+      background: #11110f;
+      border: 1px solid var(--border);
       overflow-wrap: anywhere;
-      margin-top: 15px;
     }
 
-    #otpForm {
-      margin-top: 15px;
-    }
-
-    #recaptcha-container {
-      margin-top: 15px;
+    .small-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
     }
 
     footer {
-      padding: 30px 20px;
+      padding: 30px 0;
       text-align: center;
-      background: var(--dark);
-      color: #ddd;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
     }
 
     footer strong {
       color: var(--gold);
     }
 
-    footer p {
-      font-size: 13px;
-      margin: 5px 0;
-    }
-
     @media (max-width: 700px) {
       .navbar {
-        flex-direction: column;
+        justify-content: center;
       }
 
       nav {
@@ -354,23 +380,24 @@
       }
 
       .hero {
-        padding: 65px 18px;
+        min-height: 430px;
+      }
+
+      section {
+        padding: 60px 0;
       }
 
       .about-grid,
+      .shop-grid,
       .contact-grid {
         grid-template-columns: 1fr;
       }
 
-      .features {
-        grid-template-columns: 1fr;
+      .otp-card {
+        padding: 22px;
       }
 
-      section {
-        padding: 48px 17px;
-      }
-
-      .button-outline {
+      .outline-button {
         margin: 12px 0 0;
       }
     }
@@ -378,554 +405,336 @@
 </head>
 
 <body>
+  <header>
+    <div class="container navbar">
+      <a class="logo" href="#home">BRAINBOX</a>
 
-<header>
-  <div class="navbar">
-    <a href="#home" class="logo">BRAINBOX</a>
-
-    <nav aria-label="Main navigation">
-      <a href="#home">Home</a>
-      <a href="#about">About Us</a>
-      <a href="#shop">Shop</a>
-      <a href="#contact">Contact Us</a>
-      <a href="#verification">Verify Phone</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-
-  <!-- HOME -->
-  <section class="hero" id="home">
-    <div class="container">
-      <p class="eyebrow">Welcome to BRAINBOX</p>
-
-      <h1>
-        Style That Speaks.<br>
-        <span>Confidence That Shows.</span>
-      </h1>
-
-      <p>
-        Discover fashion that expresses who you are.
-        Explore clothing that complements your personality,
-        lifestyle and budget.
-      </p>
-
-      <a class="button" href="#shop">Explore Our Shop</a>
-      <a class="button-outline" href="#about">Our Story</a>
+      <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#shop">Shop</a>
+        <a href="#contact">Contact Us</a>
+        <a href="#verification">Verify Phone</a>
+      </nav>
     </div>
-  </section>
+  </header>
 
-  <!-- ABOUT US -->
-  <section id="about">
-    <div class="container">
-
-      <div class="section-heading">
-        <p class="eyebrow">Our Story</p>
-        <h2>About BRAINBOX</h2>
-        <p>Fashion, value and confidence in every choice.</p>
-      </div>
-
-      <div class="about-grid">
-        <div class="about-panel">
-          <p class="eyebrow">More Than Clothing</p>
-          <h3>Your Style Is Your Story.</h3>
-          <p>Express yourself. Dress with confidence.</p>
-        </div>
-
-        <div class="about-copy">
-          <h3>Who We Are</h3>
-
-          <p>
-            BRAINBOX is a clothing business dedicated to helping
-            customers express themselves through fashion. We believe
-            clothing is more than what you wear; it is part of how
-            you express your individuality and confidence.
-          </p>
-
-          <p>
-            We aim to provide stylish and affordable clothing,
-            friendly customer service and a convenient shopping
-            experience.
-          </p>
-
-          <h3>Our Mission</h3>
-
-          <p>
-            Our mission is to make fashion accessible by helping
-            customers discover clothing that suits their personal
-            style, needs and budget.
-          </p>
-
-          <h3>Our Promise</h3>
-
-          <p>
-            We value our customers and aim to communicate clearly,
-            offer helpful service and make every shopping experience
-            enjoyable.
-          </p>
-        </div>
-      </div>
-
-      <div class="features">
-        <div class="feature">
-          <div class="icon">👗</div>
-          <h3>Fashion & Style</h3>
-          <p>Clothing to help you express your individuality.</p>
-        </div>
-
-        <div class="feature">
-          <div class="icon">💎</div>
-          <h3>Value for Money</h3>
-          <p>We aim to make fashionable choices affordable.</p>
-        </div>
-
-        <div class="feature">
-          <div class="icon">🤝</div>
-          <h3>Customer Care</h3>
-          <p>Your questions and shopping experience matter to us.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SHOP -->
-  <section class="shop-section" id="shop">
-    <div class="container">
-
-      <div class="section-heading">
-        <p class="eyebrow">Find Your Look</p>
-        <h2>Our Shop</h2>
-        <p>Discover your next favourite outfit.</p>
-      </div>
-
-      <div class="shop-box">
-        <h3>Your Style Journey Starts Here</h3>
-
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-content">
+        <div class="eyebrow">Fashion · Confidence · Identity</div>
+        <h1>Wear Your Style.<br><span>Own Your Story.</span></h1>
         <p>
-          Contact us to ask about available clothing, sizes,
-          prices and ordering. Our online product catalogue
-          will be added when the product details are ready.
+          Welcome to BRAINBOX, where fashion meets confidence.
+          Discover a style that represents you and express yourself
+          with confidence every day.
         </p>
-
-        <a class="button"
-           href="https://wa.me/2347063656934">
-          Enquire on WhatsApp
-        </a>
+        <a class="button" href="#shop">Explore Collection</a>
+        <a class="outline-button" href="#about">Discover BRAINBOX</a>
       </div>
+    </section>
 
-    </div>
-  </section>
+    <section id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-panel">
+            <div>
+              <strong>BRAINBOX</strong>
+              <p>Your Style. Your Confidence.</p>
+            </div>
+          </div>
 
-  <!-- CONTACT US -->
-  <section id="contact">
+          <div class="about-copy">
+            <div class="eyebrow">Who We Are</div>
+            <h2>About <span class="gold">BRAINBOX</span></h2>
+            <p>
+              BRAINBOX is a fashion and clothing brand built around
+              self-expression, confidence, and personal style.
+            </p>
+            <p>
+              Our goal is to help you express who you are through
+              fashion. Your style should feel like you.
+            </p>
+            <a class="button" href="#contact">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shop" id="shop">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Find Your Style</div>
+          <h2>Explore Our <span class="gold">Collection</span></h2>
+          <p>Discover styles made for your everyday confidence.</p>
+        </div>
+
+        <div class="shop-grid">
+          <article class="product-card">
+            <div class="product-art" aria-hidden="true">01</div>
+            <div class="product-info">
+              <h3>Everyday Wear</h3>
+              <p>Simple, versatile fashion for everyday life.</p>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-art" aria-hidden="true">02</div>
+            <div class="product-info">
+              <h3>Street Style</h3>
+              <p>Express your personality with confident style.</p>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-art" aria-hidden="true">03</div>
+            <div class="product-info">
+              <h3>Classic Looks</h3>
+              <p>Timeless inspiration for your wardrobe.</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="small-note" style="text-align:center;margin-top:25px;">
+          Product cards are design placeholders. Add your actual products
+          and prices before accepting orders.
+        </p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Get In Touch</div>
+          <h2>Contact <span class="gold">Us</span></h2>
+          <p>Have a question? Contact BRAINBOX using the details below.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h3>Our Location</h3>
+            <p>Akure, Ondo State, Nigeria</p>
+          </div>
+
+          <div class="contact-card">
+            <h3>Phone Number</h3>
+            <p><a href="tel:+2347063656934">07063656934</a></p>
+          </div>
+
+          <div class="contact-card">
+            <h3>Email Address</h3>
+            <p>
+              <a href="mailto:omoladetomiwa54@gmail.com">
+                omoladetomiwa54@gmail.com
+              </a>
+            </p>
+          </div>
+
+          <div class="contact-card">
+            <h3>WhatsApp</h3>
+            <p>
+              <a href="https://wa.me/2347063656934"
+                 target="_blank" rel="noopener noreferrer">
+                Chat with us on WhatsApp
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="otp-section" id="verification">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Secure Verification</div>
+          <h2>Verify Your <span class="gold">Phone</span></h2>
+          <p>Request an SMS code and enter it to verify your number.</p>
+        </div>
+
+        <div class="otp-card">
+          <h2>Phone Verification</h2>
+          <p>Enter your Nigerian phone number below.</p>
+
+          <form id="sendOtpForm">
+            <label for="phone">Phone Number</label>
+
+            <div class="phone-row">
+              <span class="country-code">+234</span>
+              <input
+                id="phone"
+                type="tel"
+                inputmode="numeric"
+                autocomplete="tel-national"
+                maxlength="11"
+                placeholder="7076713737"
+                aria-describedby="phoneHelp"
+                required
+              >
+            </div>
+
+            <p id="phoneHelp" class="small-note">
+              Enter your number without +234. You may enter the leading
+              zero too, for example 07076713737.
+            </p>
+
+            <button class="button full-button" id="sendOtpButton"
+                    type="submit">
+              Send OTP
+            </button>
+          </form>
+
+          <form id="otpForm" style="margin-top:20px;">
+            <label for="otp">Six-Digit Verification Code</label>
+
+            <input
+              id="otp"
+              type="text"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              placeholder="Enter SMS code"
+              required
+            >
+
+            <button class="button full-button" id="verifyOtpButton"
+                    type="submit">
+              Verify Phone
+            </button>
+          </form>
+
+          <p class="status" id="otpStatus" role="status"
+             aria-live="polite" style="margin-top:20px;">
+            Enter your phone number to begin.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
     <div class="container">
-
-      <div class="section-heading">
-        <p class="eyebrow">Get in Touch</p>
-        <h2>Contact Us</h2>
-        <p>We would love to hear from you.</p>
-      </div>
-
-      <div class="contact-grid">
-
-        <div class="contact-card">
-          <h3>Contact BRAINBOX</h3>
-
-          <p>
-            Have a question about clothing, prices or orders?
-            Reach out using the details below.
-          </p>
-
-          <p>
-            <strong>Business Name:</strong><br>
-            BRAINBOX
-          </p>
-
-          <p>
-            <strong>Address:</strong><br>
-            Akure, Ondo State, Nigeria
-          </p>
-
-          <p>
-            <strong>Phone:</strong><br>
-            <a href="tel:+2347063656934">
-              07063656934
-            </a>
-          </p>
-
-          <p>
-            <strong>Email:</strong><br>
-            <a href="mailto:omoladetomiwa54@gmail.com">
-              omoladetomiwa54@gmail.com
-            </a>
-          </p>
-
-          <p>
-            <strong>WhatsApp:</strong><br>
-            <a href="https://wa.me/2347063656934">
-              Chat with us
-            </a>
-          </p>
-        </div>
-
-        <div class="contact-card">
-          <h3>Business Enquiries</h3>
-
-          <p>
-            Contact us about clothing availability, sizes,
-            prices, orders or other questions.
-          </p>
-
-          <p>
-            We will respond using the contact details
-            you provide in your message.
-          </p>
-
-          <a class="button"
-             href="https://wa.me/2347063656934">
-            Message Us
-          </a>
-
-          <p>
-            You can also email us directly:
-          </p>
-
-          <a href="mailto:omoladetomiwa54@gmail.com">
-            Send an Email
-          </a>
-        </div>
-
-      </div>
+      <p><strong>BRAINBOX</strong></p>
+      <p>Your Style. Your Confidence.</p>
+      <p>&copy; <span id="year"></span> BRAINBOX. All rights reserved.</p>
     </div>
-  </section>
+  </footer>
 
   <script>
-  document.getElementById("year").textContent =
-    new Date().getFullYear();
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
 
-  const sendOtpForm = document.getElementById("sendOtpForm");
-  const otpForm = document.getElementById("otpForm");
-  const phoneInput = document.getElementById("phone");
-  const otpInput = document.getElementById("otp");
-  const otpStatus = document.getElementById("otpStatus");
-  const sendOtpButton = document.getElementById("sendOtpButton");
-  const verifyOtpButton = document.getElementById("verifyOtpButton");
+    const sendOtpForm = document.getElementById("sendOtpForm");
+    const otpForm = document.getElementById("otpForm");
+    const phoneInput = document.getElementById("phone");
+    const otpInput = document.getElementById("otp");
+    const otpStatus = document.getElementById("otpStatus");
+    const sendOtpButton = document.getElementById("sendOtpButton");
+    const verifyOtpButton = document.getElementById("verifyOtpButton");
 
-  let currentPhone = "";
+    let currentPhone = "";
 
-  function normalisePhone(value) {
-    let phone = value.replace(/\D/g, "");
+    function normalisePhone(value) {
+      let phone = String(value || "").replace(/\D/g, "");
 
-    if (phone.startsWith("234")) {
-      phone = phone.substring(3);
-    } else if (phone.startsWith("0")) {
-      phone = phone.substring(1);
+      if (phone.startsWith("234")) {
+        phone = phone.substring(3);
+      }
+
+      if (phone.startsWith("0")) {
+        phone = phone.substring(1);
+      }
+
+      if (!/^[789]\d{9}$/.test(phone)) {
+        return null;
+      }
+
+      return "234" + phone;
     }
 
-    if (!/^[789]\d{9}$/.test(phone)) {
-      return null;
-    }
-
-    return "234" + phone;
-  }
-
-  sendOtpForm.addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const phone = normalisePhone(phoneInput.value);
-
-    if (!phone) {
-      otpStatus.textContent =
-        "Enter a valid Nigerian phone number, e.g. 7076713737.";
-      return;
-    }
-
-    sendOtpButton.disabled = true;
-    otpStatus.textContent = "Sending your OTP...";
-
-    try {
-      const response = await fetch("/api/send-otp", {
+    async function postJSON(url, payload) {
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ phone: phone })
+        body: JSON.stringify(payload)
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(data.error || "Could not send OTP.");
+        throw new Error(data.error || "The request failed.");
       }
 
-      currentPhone = phone;
-      otpStatus.textContent =
-        "OTP request accepted. Check your phone for the SMS code.";
-      otpInput.focus();
-
-    } catch (error) {
-      otpStatus.textContent =
-        error.message || "Could not send OTP. Please try again.";
-    } finally {
-      sendOtpButton.disabled = false;
-    }
-  });
-
-  otpForm.addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    if (!currentPhone) {
-      otpStatus.textContent =
-        "Please request an OTP first.";
-      return;
+      return data;
     }
 
-    const pin = otpInput.value.trim();
+    sendOtpForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-    if (!/^\d{6}$/.test(pin)) {
-      otpStatus.textContent =
-        "Enter the 6-digit OTP sent to your phone.";
-      return;
-    }
+      const phone = normalisePhone(phoneInput.value);
 
-    verifyOtpButton.disabled = true;
-    otpStatus.textContent = "Verifying your code...";
-
-    try {
-      const response = await fetch("/api/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          phone: currentPhone,
-          pin: pin
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Verification failed.");
-      }
-
-      otpStatus.textContent =
-        data.message || "Phone number verified successfully!";
-
-    } catch (error) {
-      otpStatus.textContent =
-        error.message || "Verification failed. Please try again.";
-    } finally {
-      verifyOtpButton.disabled = false;
-    }
-  });
-  </script>
-
-</main>
-
-<footer>
-  <p><strong>BRAINBOX</strong></p>
-  <p>Your Style, Your Confidence.</p>
-  <p>Akure, Ondo State, Nigeria</p>
-  <p>
-    &copy; <span id="year"></span> BRAINBOX.
-    All rights reserved.
-  </p>
-</footer>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-
-<script>
-  document.getElementById("year").textContent =
-    new Date().getFullYear();
-
-  /*
-   * IMPORTANT:
-   * Replace every placeholder below with the values from
-   * Firebase Console > Project settings > Your apps.
-   *
-   * Never put a service-account private key in this file.
-   */
-  const firebaseConfig = {
-    apiKey: "YOUR_FIREBASE_API_KEY",
-    authDomain: "tommystore-lagos-otp.firebaseapp.com",
-    projectId: "tommystore-lagos-otp",
-    appId: "YOUR_FIREBASE_APP_ID"
-  };
-
-  const otpStatus = document.getElementById("otpStatus");
-  const sendOtpForm = document.getElementById("sendOtpForm");
-  const otpForm = document.getElementById("otpForm");
-
-  let confirmationResult = null;
-  let recaptchaVerifier = null;
-  let recaptchaWidgetId = null;
-
-  function showStatus(message) {
-    otpStatus.textContent = message;
-  }
-
-  function normaliseNigerianNumber(value) {
-    let phone = value.trim().replace(/[\s()-]/g, "");
-
-    if (/^0\d{10}$/.test(phone)) {
-      phone = "+234" + phone.substring(1);
-    } else if (/^234\d{10}$/.test(phone)) {
-      phone = "+" + phone;
-    }
-
-    if (!/^\+234\d{10}$/.test(phone)) {
-      throw new Error(
-        "Enter a valid Nigerian number, e.g. +2348012345678."
-      );
-    }
-
-    return phone;
-  }
-
-  function firebaseConfigured() {
-    return (
-      firebaseConfig.apiKey !== "YOUR_FIREBASE_API_KEY" &&
-      firebaseConfig.appId !== "YOUR_FIREBASE_APP_ID" &&
-      firebaseConfig.apiKey.length > 0 &&
-      firebaseConfig.appId.length > 0
-    );
-  }
-
-  function setupRecaptcha() {
-    if (recaptchaVerifier) {
-      return;
-    }
-
-    recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      "recaptcha-container",
-      {
-        size: "normal",
-        callback: function() {
-          showStatus("Security check completed. You can request your code.");
-        },
-        "expired-callback": function() {
-          showStatus("Security check expired. Please try again.");
-        }
-      }
-    );
-
-    recaptchaVerifier.render().then(function(widgetId) {
-      recaptchaWidgetId = widgetId;
-    });
-  }
-
-  try {
-    if (firebaseConfigured()) {
-      firebase.initializeApp(firebaseConfig);
-      firebase.auth().useDeviceLanguage();
-      setupRecaptcha();
-    } else {
-      showStatus(
-        "Firebase setup is incomplete. Add your Firebase web configuration first."
-      );
-    }
-  } catch (error) {
-    showStatus("Firebase setup error: " + error.message);
-  }
-
-  sendOtpForm.addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    if (!firebaseConfigured()) {
-      showStatus(
-        "Add your real Firebase API key and App ID before requesting an OTP."
-      );
-      return;
-    }
-
-    try {
-      const phone = normaliseNigerianNumber(
-        document.getElementById("phone").value
-      );
-
-      showStatus("Preparing to send your verification code...");
-
-      if (!recaptchaVerifier) {
-        setupRecaptcha();
-        showStatus("Complete the security check, then try again.");
+      if (!phone) {
+        otpStatus.textContent =
+          "Enter a valid Nigerian phone number, such as 7076713737.";
         return;
       }
 
-      confirmationResult =
-        await firebase.auth().signInWithPhoneNumber(
-          phone,
-          recaptchaVerifier
-        );
+      sendOtpButton.disabled = true;
+      otpStatus.textContent = "Requesting your OTP...";
 
-      showStatus(
-        "Verification code requested. Check your phone for the SMS."
-      );
-    } catch (error) {
-      console.error("Firebase phone authentication error:", error);
+      try {
+        const data = await postJSON("/api/send-otp", { phone });
 
-      showStatus(
-        "Could not request OTP: " +
-        (error.message || "Please check your Firebase settings.")
-      );
-
-      if (
-        error.code === "auth/captcha-check-failed" ||
-        error.code === "auth/invalid-app-credential"
-      ) {
-        if (recaptchaVerifier) {
-          recaptchaVerifier.clear();
-          recaptchaVerifier = null;
-        }
-
-        try {
-          setupRecaptcha();
-        } catch (_) {}
+        currentPhone = phone;
+        otpInput.value = "";
+        otpStatus.textContent =
+          data.message || "OTP request accepted. Check your phone.";
+        otpInput.focus();
+      } catch (error) {
+        otpStatus.textContent =
+          error.message || "Could not send OTP. Please try again.";
+      } finally {
+        sendOtpButton.disabled = false;
       }
-    }
-  });
+    });
 
-  otpForm.addEventListener("submit", async function(event) {
-    event.preventDefault();
+    otpForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-    if (!confirmationResult) {
-      showStatus("Request a verification code first.");
-      return;
-    }
+      if (!currentPhone) {
+        otpStatus.textContent =
+          "Request an OTP first before verifying your phone.";
+        return;
+      }
 
-    const code = document.getElementById("otp").value.trim();
+      const pin = otpInput.value.trim();
 
-    if (!/^\d{6}$/.test(code)) {
-      showStatus("Enter the six-digit verification code.");
-      return;
-    }
+      if (!/^\d{6}$/.test(pin)) {
+        otpStatus.textContent =
+          "Enter the six-digit code sent to your phone.";
+        return;
+      }
 
-    try {
-      showStatus("Verifying your code...");
+      verifyOtpButton.disabled = true;
+      otpStatus.textContent = "Verifying your code...";
 
-      const credential =
-        await confirmationResult.confirm(code);
+      try {
+        const data = await postJSON("/api/verify-otp", {
+          phone: currentPhone,
+          pin: pin
+        });
 
-      showStatus(
-        "Phone verified successfully for " +
-        credential.user.phoneNumber + "."
-      );
-    } catch (error) {
-      console.error("Firebase OTP verification error:", error);
-
-      showStatus(
-        error.code === "auth/invalid-verification-code"
-          ? "That code is incorrect. Check the SMS and try again."
-          : "Verification failed: " +
-            (error.message || "Please try again.")
-      );
-    }
-  });
-</script>
-
+        otpStatus.textContent =
+          data.message || "Phone number verified successfully!";
+      } catch (error) {
+        otpStatus.textContent =
+          error.message || "Verification failed. Please try again.";
+      } finally {
+        verifyOtpButton.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
