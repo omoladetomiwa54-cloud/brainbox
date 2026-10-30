@@ -144,8 +144,8 @@ if (!recentRequests.has(phoneKey)) {
       const result = await termiiRequest("/api/sms/otp/send", {
         message_type: "NUMERIC",
         to: phone,
-        from: "N-Alert",
-        channel: "generic",
+        from: "OE-Alert",
+        channel: "dnd",
         pin_attempts: 3,
         pin_time_to_live: 10,
         pin_length: 6,
