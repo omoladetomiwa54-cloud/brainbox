@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 
 const http = require("http");
@@ -6,242 +5,212 @@ const fs = require("fs");
 const path = require("path");
 
 const PORT = process.env.PORT || 3000;
-const BASE_URL =
-  process.env.TERMII_BASE_URL || "https://api.ng.termii.com";
 const API_KEY = process.env.TERMII_API_KEY;
+const TERMII_URL = "https://api.ng.termii.com";
 
-const recentRequests = new Map();
 const pendingPins = new Map();
 
 function sendJSON(res, status, data) {
   res.writeHead(status, {
-    "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store",
-    "X-Content-Type-Options": "nosniff"
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
   });
   res.end(JSON.stringify(data));
 }
 
-function readBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = "";
+function normalizePhone(phone) {
+  let number = String(phone || "").replace(/\D/g, "");
 
-    req.on("data", chunk => {
-      body += chunk;
-
-      if (body.length > 10000) {
-        reject(new Error("Request too large"));
-        req.destroy();
-      }
-    });
-
-    req.on("end", () => {
-      try {
-        resolve(JSON.parse(body || "{}"));
-      } catch {
-        reject(new Error("Invalid JSON"));
-      }
-    });
-
-    req.on("error", reject);
-  });
-}
-
-async function termiiRequest(endpoint, payload) {
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      ...payload,
-      api_key: API_KEY
-    }),
-    signal: AbortSignal.timeout(15000)
-  });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(data.message || "Termii request failed");
+  if (number.startsWith("0")) {
+    number = "234" + number.slice(1);
   }
 
-  return data;
+  if (number.startsWith("234") && number.length === 13) {
+    return number;
+  }
+
+  return null;
+}
+
+async function termiiRequest(endpoint, data) {
+  const response = await fetch(`${TERMII_URL}${endpoint}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      ...data,
+      api_key: API_KEY
+    })
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      result.message || result.error || "Termii request failed"
+    );
+  }
+
+  return result;
 }
 
 const server = http.createServer(async (req, res) => {
-  const url = new URL(
-    req.url,
-    `http://${req.headers.host || "localhost"}`
-  );
-
-  // Main BRAINBOX page
-  if (req.method === "GET" && url.pathname === "/") {
-    fs.readFile(
-      path.join(__dirname, "index.html"),
-      (err, content) => {
-        if (err) {
-          return sendJSON(res, 500, {
-            error: "Could not load index.html. Check your project folder."
-          });
-        }
-
-        res.writeHead(200, {
-          "Content-Type": "text/html; charset=utf-8"
-        });
-        res.end(content);
-      }
-    );
-    return;
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    });
+    return res.end();
   }
 
-  // Server status
-  if (req.method === "GET" && url.pathname === "/api/status") {
+  if (req.method === "GET" && req.url === "/") {
+    const file = path.join(__dirname, "index.html");
+
+    if (!fs.existsSync(file)) {
+      return sendJSON(res, 404, { error: "Website file not found" });
+    }
+
+    res.writeHead(200, { "Content-Type": "text/html" });
+    return fs.createReadStream(file).pipe(res);
+  }
+
+  if (req.method === "GET" && req.url === "/api/status") {
     return sendJSON(res, 200, {
       server: "running",
       termiiConfigured: Boolean(API_KEY)
     });
   }
 
-  // Request a phone OTP
-  if (req.method === "POST" && url.pathname === "/api/send-otp") {
-    try {
-      if (!API_KEY) {
-        return sendJSON(res, 503, {
-          error: "Termii API key is missing from .env."
-        });
-      }
-
-      const body = await readBody(req);
-      const phone = String(body.phone || "").replace(/[\s()+-]/g, "");
-
-      if (!/^234\d{10}$/.test(phone)) {
-        return sendJSON(res, 400, {
-          error: "Enter a Nigerian number, e.g. 2348012345678."
-        });
-      }
-
-      const now = Date.now();
-const phoneKey = phone;
-const today = new Date().toDateString();
-
-if (!recentRequests.has(phoneKey)) {
-  recentRequests.set(phoneKey, { count: 1, date: today });
-} else {
-  const record = recentRequests.get(phoneKey);
-  if (record.date !== today) {
-    record.count = 1;
-    record.date = today;
-  } else {
-    record.count++;
+  if (req.method !== "POST") {
+    return sendJSON(res, 404, { error: "Route not found" });
   }
-  if (record.count > 1000) {
-    return sendJSON(res, 429, {
-      error: "You don reach 1000 OTP today. Try tomorrow."
-    });
-  }
-  recentRequests.set(phoneKey, record);
-}
 
-      const result = await termiiRequest("/api/sms/otp/send", {
-        message_type: "NUMERIC",
-        to: phone,
-        from: "OE-Alert",
-        channel: "dnd",
-        pin_attempts: 3,
-        pin_time_to_live: 10,
-        pin_length: 6,
-        pin_placeholder: "< 123456 >",
-        message_text:
-          "Your BRAINBOX verification code is < 123456 >. It expires in 5 minutes."
-      });
+  let body = "";
 
-      const pinId = result.pinId || result.pin_id;
+  req.on("data", chunk => {
+    body += chunk;
 
-      if (!pinId) {
-        recentRequests.delete(phone);
-        return sendJSON(res, 502, {
-          error: "Termii did not return an OTP reference. Check your Termii settings."
-        });
-      }
-
-      pendingPins.set(phone, {
-        pinId,
-        createdAt: Date.now()
-      });
-
-      return sendJSON(res, 200, {
-        message: "OTP request accepted. Check your phone."
-      });
-    } catch (error) {
-      console.error("OTP send failed:", error.message);
-      return sendJSON(res, 502, {
-        error: "Could not send OTP. Check your Termii settings and balance."
-      });
+    if (body.length > 10000) {
+      req.destroy();
     }
-  }
+  });
 
-  // Verify a phone OTP
-  if (req.method === "POST" && url.pathname === "/api/verify-otp") {
+  req.on("end", async () => {
     try {
+      const data = JSON.parse(body || "{}");
+
       if (!API_KEY) {
-        return sendJSON(res, 503, {
-          error: "Termii API key is missing from .env."
+        return sendJSON(res, 500, {
+          error: "Termii API key is not configured on the server."
         });
       }
 
-      const body = await readBody(req);
-      const phone = String(body.phone || "").replace(/[\s()+-]/g, "");
-      const pin = String(body.pin || "").trim();
-      const pending = pendingPins.get(phone);
+      // SEND OTP
+      if (req.url === "/api/send-otp") {
+        const phone = normalizePhone(data.phone || data.number);
 
-      if (!/^234\d{10}$/.test(phone) || !/^\d{6}$/.test(pin)) {
-        return sendJSON(res, 400, {
-          error: "Enter a valid phone number and six-digit code."
+        if (!phone) {
+          return sendJSON(res, 400, {
+            error: "Enter a valid Nigerian phone number."
+          });
+        }
+
+        const result = await termiiRequest(
+          "/api/sms/otp/send",
+          {
+            message_type: "NUMERIC",
+            to: phone,
+            from: "OE Alert",
+            channel: "dnd",
+            pin_attempts: 3,
+            pin_time_to_live: 10,
+            pin_length: 6,
+            pin_placeholder: "< 123456 >",
+            message_text:
+              "Your BRAINBOX verification code is < 123456 >. It expires in 10 minutes. Do not share this code.",
+            pin_type: "NUMERIC"
+          }
+        );
+
+        if (result.pinId) {
+          pendingPins.set(phone, {
+            pinId: result.pinId,
+            createdAt: Date.now()
+          });
+        }
+
+        return sendJSON(res, 200, {
+          success: true,
+          message: "OTP request submitted.",
+          pinId: result.pinId
         });
       }
 
-      if (!pending || Date.now() - pending.createdAt > 5 * 60 * 1000) {
-        pendingPins.delete(phone);
-        return sendJSON(res, 400, {
-          error: "Code expired or not requested. Request a new code."
-        });
-      }
+      // VERIFY OTP
+      if (req.url === "/api/verify-otp") {
+        const phone = normalizePhone(data.phone || data.number);
+        const pin = String(data.pin || data.otp || "");
 
-      const result = await termiiRequest("/api/sms/otp/verify", {
-        pin_id: pending.pinId,
-        pin
-      });
+        if (!phone || !pin) {
+          return sendJSON(res, 400, {
+            error: "Enter your phone number and OTP."
+          });
+        }
 
-      if (
-        String(result.verified).toLowerCase() === "true" ||
-        String(result.status).toLowerCase() === "success"
-      ) {
+        const saved = pendingPins.get(phone);
+
+        if (!saved || Date.now() - saved.createdAt > 10 * 60 * 1000) {
+          pendingPins.delete(phone);
+
+          return sendJSON(res, 400, {
+            error: "OTP expired or not found. Request a new code."
+          });
+        }
+
+        const result = await termiiRequest(
+          "/api/sms/otp/verify",
+          {
+            pin_id: saved.pinId,
+            pin: pin
+          }
+        );
+
+        const verified =
+          String(result.verified).toLowerCase() === "true" ||
+          String(result.status).toLowerCase() === "success";
+
+        if (!verified) {
+          return sendJSON(res, 400, {
+            success: false,
+            error: "Incorrect OTP. Please try again."
+          });
+        }
+
         pendingPins.delete(phone);
 
         return sendJSON(res, 200, {
-          verified: true,
-          message: "Phone number verified."
+          success: true,
+          message: "Phone number verified successfully."
         });
       }
 
-      return sendJSON(res, 400, {
-        verified: false,
-        error: "The code was not verified."
+      return sendJSON(res, 404, {
+        error: "API route not found."
       });
+
     } catch (error) {
-      console.error("OTP verification failed:", error.message);
-      return sendJSON(res, 502, {
-        error: "Could not verify the code. Check your Termii settings."
+      console.error("Server error:", error);
+
+      return sendJSON(res, 500, {
+        success: false,
+        error: error.message || "Something went wrong."
       });
     }
-  }
-
-  // Any unknown route
-  return sendJSON(res, 404, {
-    error: "Route not found",
-    requestedPath: url.pathname
   });
 });
 
 server.listen(PORT, () => {
-  console.log(`BRAINBOX is running at http://localhost:${PORT}`);
+  console.log(`BRAINBOX server running on port ${PORT}`);
 });
