@@ -17,7 +17,7 @@ async function sendTermiiSMS(to, message) {
     sms: message,
     type: 'plain',
     channel: 'generic',
-    api_key: tlv_a7y87s6tzJXOW12JCNHC6TZSt3ULDrJV9WdMVyt5a-0
+    api_key:TERMII_API_KEY
   });
   
   const options = {
