@@ -1,120 +1,128 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// In-memory storage - replace with DB later
-let messages = [];
+// Allow all CORS for phone
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  next();
+});
 
-// Helper to create message like 147 panel
-function addMessage(phone, otp) {
-  const now = new Date();
-  const msg = {
-    id: Date.now(),
-    number: phone.toString(),
-    from: phone.toString(),
-    text: `Your OTP is ${otp}`,
-    otp: otp.toString(),
-    message: `Your OTP is ${otp}`,
-    received_at: now.toISOString(),
-    created_at: now.toISOString(),
-    expiry: new Date(now.getTime() + 5 * 60000).toISOString(),
-    expire_at: new Date(now.getTime() + 5 * 60000).toISOString()
-  };
-  messages.push(msg);
-  // Keep only last 100
-  if (messages.length > 100) messages.shift();
-  console.log('NEW OTP DROPPED:', msg);
-  return msg;
-}
+// In-memory storage - This is your 147 panel data
+let otpMessages = [];
 
-// ROOT - 147 CLONE PANEL UI
+// HOME - Looks like 147 panel
 app.get('/', (req, res) => {
   res.send(`
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SMS Panel - 147 Clone</title>
+<title>BrainBox - 147 Panel</title>
 <style>
-body{font-family:Arial;background:#f4f4f4;margin:0;padding:10px}
-h2{background:#000;color:#fff;padding:10px;text-align:center}
-.box{background:#fff;padding:15px;border-radius:5px;margin-bottom:15px}
-input{padding:10px;width:60%;border:1px solid #ccc}
-button{padding:10px 15px;background:#000;color:#fff;border:none;cursor:pointer}
-table{width:100%;background:#fff;border-collapse:collapse}
-th{background:#000;color:#fff;padding:8px}
-td{padding:8px;border-bottom:1px solid #ddd;font-size:14px}
-.live{color:green;font-weight:bold}
+body{font-family:Arial;padding:10px;background:#f5f5f5}
+.card{background:#fff;padding:15px;border-radius:10px;margin-bottom:15px;box-shadow:0 2px 5px #ccc}
+input{width:90%;padding:12px;margin:5px 0;border:1px solid #ccc;border-radius:5px}
+button{width:95%;padding:12px;background:#000;color:#fff;border:none;border-radius:5px;font-weight:bold}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{border:1px solid #ddd;padding:8px;font-size:13px;text-align:left}
+th{background:#000;color:#fff}
+.success{color:green;font-weight:bold}
 </style>
 </head>
 <body>
-<h2>147.135.212.197 PANEL CLONE - LIVE</h2>
-<div class="box">
-<b>Rented Number: 7020220001 (2347020220001)</b><br><br>
-<input id="phone" value="2347020220001" placeholder="Enter number">
-<input id="otpInput" value="" placeholder="OTP (leave empty for auto)" style="width:20%">
-<button onclick="sendOTP()">SEND OTP</button>
-<p id="status"></p>
-<span class="live">● LIVE - OTP will drop below</span>
+<div class="card">
+<h2>🧠 BrainBox OTP - LIVE</h2>
+<p><b>Rented Number:</b> 7020220001 (2347020220001)</p>
+<input id="phone" value="2347020220001" placeholder="Enter number 234...">
+<button onclick="sendOTP()">SEND OTP TO 7020220001</button>
+<p id="result"></p>
 </div>
-<table id="tbl">
-<tr><th>Number</th><th>OTP / Message</th><th>Time</th><th>Expiry</th></tr>
+
+<div class="card">
+<h3>147 Panel (Live Messages)</h3>
+<button onclick="loadPanel()" style="background:#444">REFRESH PANEL</button>
+<div style="overflow-x:auto;margin-top:10px">
+<table id="panel">
+<tr><th>Number</th><th>OTP</th><th>Time</th></tr>
 </table>
+</div>
+</div>
+
+<div class="card">
+<a href="/crapi/st/viewstats?token=RFZVSURBUzRcZIdddZBoe0pQkotEaVNlgndka3RSh2tHZGNSfIyUag==&records=10" target="_blank">Open Raw 147 JSON</a> | 
+<a href="/api/otps" target="_blank">View All OTPs</a>
+</div>
+
 <script>
-async function load(){
- let r = await fetch('/crapi/st/viewstats?token=RFZVSURBUzRcZIdddZBoe0pQkotEaVNlgndka3RSh2tHZGNSfIyUag==&records=10');
- let data = await r.json();
- let rows = Array.isArray(data) ? data : (data.data || data.messages || []);
- let html = '<tr><th>Number</th><th>OTP / Message</th><th>Time</th><th>Expiry</th></tr>';
- rows.reverse().forEach(m=>{
-   html += \`<tr><td>\${m.number||m.from}</td><td>\${m.otp||m.text||m.message}</td><td>\${(m.received_at||m.created_at||'').substring(11,19)}</td><td>\${(m.expiry||m.expire_at||'').substring(11,19)}</td></tr>\`;
- });
- document.getElementById('tbl').innerHTML = html;
-}
 async function sendOTP(){
- let phone = document.getElementById('phone').value;
- let otpInput = document.getElementById('otpInput').value;
- let otp = otpInput || Math.floor(100000+Math.random()*900000).toString();
- document.getElementById('status').innerText = 'Sending...';
- let res = await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone, otp})});
- let d = await res.json();
- document.getElementById('status').innerText = 'Dropped: ' + JSON.stringify(d);
- load();
+ let phone=document.getElementById('phone').value;
+ document.getElementById('result').innerHTML='Sending...';
+ let res=await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});
+ let data=await res.json();
+ document.getElementById('result').innerHTML='<span class=success>SENT: '+JSON.stringify(data)+'</span>';
+ loadPanel();
 }
-setInterval(load, 2000);
-load();
+async function loadPanel(){
+ let res=await fetch('/api/otps');
+ let data=await res.json();
+ let html='<tr><th>Number</th><th>OTP / Text</th><th>Time</th></tr>';
+ data.reverse().forEach(m=>{
+   html+='<tr><td>'+m.number+'</td><td>'+(m.otp||m.text)+'</td><td>'+new Date(m.received_at||m.time).toLocaleString()+'</td></tr>';
+ });
+ document.getElementById('panel').innerHTML=html;
+}
+loadPanel();
+setInterval(loadPanel,5000);
 </script>
 </body>
 </html>
   `);
 });
 
-// 147 EXACT ENDPOINT - This is what makes your panel work like 147
+// 147 PANEL API - Your rented number will show here
 app.get('/crapi/st/viewstats', (req, res) => {
-  const records = parseInt(req.query.records) || 10;
-  const last = messages.slice(-records).reverse();
-  // Return as array like original 147 does
-  res.json(last);
+  // This is the exact route 147 panel uses
+  res.json(otpMessages.slice(-10).reverse());
 });
 
-// Extra endpoints for your API
+// Alias for old 147 link
 app.get('/api/otps', (req, res) => {
-  res.json(messages);
+  res.json(otpMessages);
 });
 
+// SEND OTP - This saves to 147 panel
 app.post('/api/send-otp', (req, res) => {
-  const phone = req.body.phone || req.body.number || '2347020220001';
-  const otp = req.body.otp || Math.floor(100000 + Math.random() * 900000).toString();
-  const msg = addMessage(phone, otp);
-  res.json({ success: true, ...msg });
+  try {
+    let phone = req.body.phone || '2347020220001';
+    // Clean number
+    phone = phone.toString().replace(/\D/g,'');
+    let otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    let message = {
+      id: Date.now(),
+      number: phone,
+      otp: otp,
+      text: `Your BrainBox OTP is ${otp}`,
+      received_at: new Date().toISOString(),
+      time: new Date().toISOString(),
+      expiry: new Date(Date.now() + 5*60000).toISOString()
+    };
+    
+    otpMessages.push(message);
+    console.log('NEW OTP SAVED:', message);
+    
+    res.json({ success: true, message: 'OTP saved to 147 panel', data: message });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ success: false, error: e.message });
+  }
 });
-
-// Health
-app.get('/health', (req, res) => res.send('OK'));
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log('147 CLONE LIVE on ' + PORT));
+app.listen(PORT, () => {
+  console.log('BrainBox LIVE on port ' + PORT);
+});
